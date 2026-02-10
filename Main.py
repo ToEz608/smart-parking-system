@@ -1,10 +1,17 @@
 import time
 from datetime import datetime
+import random
 
 Parkhaus_Parkplätze = 10
 parkzeit_start = []
 Parkschein = []
-    
+
+def freier_platz():
+    while True:
+        nummer = random.randint(1, 10)
+        if nummer not in Parkschein:
+            return nummer
+
 def status_parkhaus():
     if Parkhaus_Parkplätze >= 10:
         print("Alle Parkplätze verfügbar")
@@ -12,7 +19,6 @@ def status_parkhaus():
         print("Keine Parkplätze verfügbar")
     else:
         print("Es sind noch ",(Parkhaus_Parkplätze)," Parkplätze verfügbar")
-        print(Parkschein)
 
 def format_zeit(sekunden):
     """Rundet auf nächste volle Stunde, wenn angebrochen"""
@@ -38,10 +44,10 @@ def main():
         choice = input("\nBereich auswählen:")
         if choice == "enter":
             if 10 >= Parkhaus_Parkplätze > 0:
-                freier_platz = Parkhaus_Parkplätze
-                Parkschein.append(Parkhaus_Parkplätze)
+                Schein = freier_platz()
+                Parkschein.append(Schein)
                 parkzeit_start.append(time.time())
-                print("Ihre Parknummer lautet ",freier_platz,"")
+                print("Ihre Parknummer lautet ",Schein,"")
                 print("Beginn der Parkzeit um ",(time.strftime("%H:%M")),"")
                 time.sleep(4)
                 print("Tor öffnet sich")
@@ -54,14 +60,18 @@ def main():
                 continue
             else:
                 print("Keine Parkplätze verfügbar")
-                input("Drücke ENTER zum fortfahren")
+                time.sleep(1)
                 continue
         elif choice == "exit":
             if Parkhaus_Parkplätze >= 10:
                 print("Parkhaus ist Leer")
-                input("Drücke ENTER zum fortfahren")
+                time.sleep(2)
             else:
                 parknummer = int(input("Bitte geben sie ihre Parknummer ein: "))
+                if parknummer not in Parkschein:
+                    print("Parknummer exestiert nicht.")
+                    time.sleep(2)
+                    continue
                 platz = Parkschein.index(parknummer)
                 differenz = time.time() - parkzeit_start[platz]
                 print("Sie haben für",(format_zeit(differenz)),"h geparkt.")
@@ -76,7 +86,7 @@ def main():
             continue
         elif choice == "status":
             status_parkhaus()
-            input("Drücke ENTER zum fortfahren")
+            time.sleep(4)
             continue
         elif choice == "maintenance":
             continue
@@ -88,12 +98,12 @@ def main():
                 choice = "on"
             else:
                 print("\nEingabe fehlerhaft! Vorgang wird abgebrochen.\n")
-                input("Drücke ENTER um zum Menü zu gelangen")
+                time.sleep(2)
                 choice = "on"
             
         else:
             print("\nUngültige eingabe! Bitte korrigieren!\n")
-            input("Drücke ENTER zum wiederholen")
+            time.sleep(2)
             choice = "on"
 
 if __name__ == "__main__":
